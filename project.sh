@@ -11,9 +11,10 @@ checkConfig() {
 # Создание нового файла конфигурации, если его не было или он поврежден
 initConfig() {
   touch conf.myconfig
-  echo '*.log' > conf.myconfig
-  echo '*.txt' >> conf.myconfig
+  echo '*.log ' > conf.myconfig
+  echo '*.txt ' >> conf.myconfig
   echo 'grep error* last.txt>last.log' >> conf.myconfig
+  echo "$PWD" >> conf.myconfig
 }
 
 
@@ -22,6 +23,8 @@ startupConfig() { # Проверка/инициализация файла ко�
     echo 'config file exists'
     if [ checkConfig ]; then
       'config file is OK'
+      wd=$(sed -n '4p' 'conf.myconfig')
+      cd $wd
     else
       'config file is damaged, restoring default state'
       initConfig
@@ -118,9 +121,13 @@ showCWD() {
 
 # 10 Изменяет текущую рабочую директорию скрипта
 changeCWD() {
+  prev_wd=$(sed -n '4p' 'conf.myconfig')
+  echo "Текущий полный путь: $prev_wd"
   echo -n 'Введите полный или относительный путь новой директории (как для cd): '
   read newwd
   cd $newwd
+  cp "$prev_wd/conf.myconfig" "$(PWD)/conf.myconfig"
+  sed -i '' "4s/$prev_wd/$newwd/g" 'conf.myconfig'
 }
 
 # 11 Удаляет все файлы, подходящие по расширению как "временные"
@@ -187,6 +194,44 @@ silentArgsCorrect() {
   echo "not implemented"
 }
 
+commandSelector() {
+  commm=$1
+  if [ $commm -eq 1 ]; then
+    showTmp
+  elif [ $commm -eq 2 ]; then
+    redefineTmp
+  elif [ $commm -eq 3 ]; then
+    addTmp
+  elif [ $commm -eq 4 ]; then
+    removeTmp
+  elif [ $commm -eq 5 ]; then
+    showWorking
+  elif [ $commm -eq 6 ]; then
+    redefineWorking
+  elif [ $commm -eq 7 ]; then
+    addWorking
+  elif [ $commm -eq 8 ]; then
+    removeWorking
+  elif [ $commm -eq 9 ]; then
+    showCWD
+  elif [ $commm -eq 10 ]; then
+    changeCWD
+  elif [ $commm -eq 11 ]; then
+    changeCWD
+  elif [ $commm -eq 12 ]; then
+    cleanupTmp
+  elif [ $commm -eq 13 ]; then
+    execProg
+  elif [ $commm -eq 14 ]; then
+    changeProg
+  elif [ $commm -eq 15 ]; then
+    showForEveryWorking
+  elif [ $commm -eq 16 ]; then
+    showJunkSize
+  fi
+
+}
+
 # Проверка, от чьего имени запущена программа
 if [ "$(id -u)" -eq 0 ]; then
   echo 'Данный скрипт нельзя запустить от имени администратора' >&2
@@ -212,15 +257,20 @@ if [ "$1" == "--interactive" ]; then
       echo -n 'Неверная команда, повторите ввод: '
       read comm
     done
-    echo "Ваша команда: $comm"
+    commandSelector $comm
     printmenu
     echo -n "Введите команду: "
     read comm
   done
   echo "Завершение."
-elif silentArgsCorrect; then
-  echo "fd"
-fi # работа в тихом режиме (выполнение одной команды)
+elif [ "$1" == "--silent" ]; then
+  echo "silent"
+else
+  echo "Использование: ./$name --interactive"
+  echo "          либо ./$name --silent [1-16]" >&2
+  exit 1
+fi
+# работа в тихом режиме (выполнение одной команды)
 #   if ! silentArgsCorrect; then
 #     echo 'Неверные аргументы' >&2
 #     echo "Использование: $name либо $name --action [1-9]" >&2
