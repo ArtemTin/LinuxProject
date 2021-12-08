@@ -1,27 +1,13 @@
 #!/bin/bash
 echo 'Hello, world!'
 
-
-showLinesAndWords() {
-  echo "file: $filename"
-  linesdirty=$(wc -l $filename)
-  lines=($linesdirty)
-  wordsdirty=$(wc -w $filename)
-  words=($wordsdirty)
+test() {
+  if [ $comm  -ge 15 ]; then
+    echo "ok"
+  else
+    echo "not ok"
+  fi
 }
 
-showForEveryWorking() {
-  extensions=$(sed -n '2p' 'conf.myconfig')
-  for ext in $extensions; do
-    files=$(find . -type f -name "$ext")
-    for file in $files; do
-      filename=$file
-      showLinesAndWords
-      echo $lines
-      echo $words
-    done
-  done
-}
-
-
-showForEveryWorking
+read comm
+test
