@@ -1,0 +1,4 @@
+*.log
+*.txt *.pgp *.tet
+grep error* last.txt>last.log 
+/Users/tinartem/Developer/LinuxProject
