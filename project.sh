@@ -20,17 +20,17 @@ initConfig() {
 
 startupConfig() { # Проверка/инициализация файла конфигурации
   if [ -e "conf.myconfig" ]; then
-    echo 'config file exists'
+    echo "config file exists"
     if [ checkConfig ]; then
-      'config file is OK'
+      echo "config file is OK"
       wd=$(sed -n '4p' 'conf.myconfig')
       cd $wd
     else
-      'config file is damaged, restoring default state'
+      echo "config file is damaged, restoring default state"
       initConfig
     fi
   else
-    echo 'no config file'
+    echo "no config file"
     initConfig
   fi
 }
@@ -38,7 +38,9 @@ startupConfig() { # Проверка/инициализация файла ко�
 # Проверка корректности ввода номера команды
 # params: comm
 commCorrect() {
-  if [ "$comm" -ge 1 -a "$comm" -le 15 ]; then
+  if ! echo "$comm" | grep -Eq "^[0-9][0-9]*$" ; then
+    return 1
+  elif [ "$comm" -ge 1 -a "$comm" -le 15 ]; then
     return 0
   else
     return 1
@@ -251,16 +253,8 @@ if [ "$(id -u)" -eq 0 ]; then
   exit 1
 fi
 
-# Проверка, что кол-во аргументов правильное
 name=`basename $0`
-if [ $# -le 0 ]; then
-  echo "Использование: ./$name --interactive" >&2
-  echo "          либо ./$name --action [1-16]" >&2
-  echo "          либо ./$name --help , чтобы показать это сообщение и меню" >&2
-  exit 1
-fi
 
-startupConfig
 # Работа в интерактивном режиме
 if [ "$1" == "--help" ]; then
   echo "Использование: ./$name --interactive"
@@ -268,6 +262,7 @@ if [ "$1" == "--help" ]; then
   echo "          либо ./$name --help , чтобы показать это сообщение и меню"
   printmenu
 elif [ "$1" == "--interactive" ]; then
+  startupConfig
   printmenu
   echo -n "Введите команду: "
   read comm
@@ -282,9 +277,10 @@ elif [ "$1" == "--interactive" ]; then
     read comm
   done
   echo "Завершение."
-elif [ "$1" == "--silent" ]; then
+elif [ "$1" == "--action" ]; then
+  startupConfig
   comm=$2
-  if [ commCorrect ]; do
+  if commCorrect; then
     commandSelector $comm
     echo "Завершение"
   else
