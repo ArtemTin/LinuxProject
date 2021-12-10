@@ -293,14 +293,3 @@ else
   echo "          либо ./$name --help , чтобы показать это сообщение и меню" >&2
   exit 1
 fi
-# работа в тихом режиме (выполнение одной команды)
-#   if ! silentArgsCorrect; then
-#     echo 'Неверные аргументы' >&2
-#     echo "Использование: $name либо $name --action [1-9]" >&2
-#     exit 1
-#   else
-#     echo ''
-#   fi
-# fi
-#
-# startupConfig
