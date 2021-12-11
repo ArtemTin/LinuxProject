@@ -2,9 +2,8 @@
 echo 'Hello, world!'
 
 # Проверка структуры файла конфигурации
-# params: configFileName, cwd
 checkConfig() {
-  echo 'config check not implemented'
+  echo "config check not implemented"
   return
 }
 
@@ -17,8 +16,8 @@ initConfig() {
   echo "$PWD" >> conf.myconfig
 }
 
-
-startupConfig() { # Проверка/инициализация файла конфигурации
+# Проверка существования и корректности файла конфигурации
+startupConfig() {
   if [ -e "conf.myconfig" ]; then
     echo "config file exists"
     if [ checkConfig ]; then
@@ -258,7 +257,7 @@ name=`basename $0`
 # Работа в интерактивном режиме
 if [ "$1" == "--help" ]; then
   echo "Использование: ./$name --interactive"
-  echo "          либо ./$name --action [1-16]"
+  echo "          либо ./$name --action [1-15]"
   echo "          либо ./$name --help , чтобы показать это сообщение и меню"
   printmenu
 elif [ "$1" == "--interactive" ]; then
@@ -284,12 +283,12 @@ elif [ "$1" == "--action" ]; then
     commandSelector $comm
     echo "Завершение"
   else
-    echo "Неверный номер комады" >&2
+    echo "Неверный номер команды" >&2
     exit 1
   fi
 else
   echo "Использование: ./$name --interactive" >&2
-  echo "          либо ./$name --action [1-16]" >&2
+  echo "          либо ./$name --action [1-15]" >&2
   echo "          либо ./$name --help , чтобы показать это сообщение и меню" >&2
   exit 1
 fi

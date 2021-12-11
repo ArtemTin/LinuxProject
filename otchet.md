@@ -11,71 +11,55 @@
 
 ## Постановка задачи
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc tempor, mauris non faucibus elementum, justo tellus laoreet ligula, a mattis sapien lectus et enim. Ut tincidunt hendrerit metus quis tempor. Nulla vel quam sed lacus ultricies pellentesque at sit amet ligula. Sed sodales in dui ac blandit. Duis turpis elit, malesuada in lacus eu, sodales vehicula justo. Aenean in tellus iaculis, tincidunt urna ut, ornare lectus. Phasellus tincidunt leo sed congue euismod. Vestibulum ac ex sodales, imperdiet lacus non, eleifend mauris. Integer pretium leo a mi gravida ultricies. Sed tempus augue nec lorem sollicitudin convallis. In nibh libero, pretium eu tristique sed, blandit vel est. Fusce tincidunt rutrum sollicitudin. Aliquam in tellus porttitor sapien scelerisque aliquam a sit amet diam. Phasellus magna nisi, malesuada a urna eu, mattis aliquam magna.
+Скрипт командной оболочки для обработки текстовых файлов.
 
-Aenean venenatis dui eros, in aliquam lectus interdum non. Aliquam varius, sapien id venenatis aliquam, arcu est aliquet felis, ut porttitor nibh tortor feugiat libero. Sed sit amet justo risus. Curabitur ullamcorper rhoncus magna, et bibendum dui consectetur gravida. Ut in vestibulum diam. Morbi vitae sollicitudin massa. Fusce imperdiet libero massa, vel ultricies diam suscipit id.
+У скрипта есть список расширений временных файлов, список расширений рабочих файлов, команда для выполнения. Все эти данные записаны в файле «conf.myconfig».
 
-Cras a lacus vitae mi sagittis ultrices. Donec non nibh eget purus eleifend placerat pulvinar in nisl. Nulla neque mauris, bibendum vitae tincidunt ac, luctus ut ex. Nullam at aliquam sem. Curabitur mollis orci id nisl accumsan, nec egestas diam malesuada. Fusce ut elementum dui. Pellentesque sed tempor lectus. Sed ac semper quam, sed maximus nisl. Phasellus in ex arcu. Nunc suscipit neque in sollicitudin fermentum.
+По умолчанию conf.myconfig выглядит так:
+```
+*.log
+*.txt
+grep error* last.txt >last.log
+```
+- список расширений временных файлов состоит из «*.log».
+- список расширений рабочих файлов состоит из «.txt».
+- команда выглядит как «grep error* last.txt >last.log».
 
+
+Скрипт предоставляет пользователю с помощью меню и текстового интерфейса следующие возможности:
+1. Просмотреть или задать заново список временных файлов.
+2. Добавить или удалить конкретное расширение из списка временных файлов.
+3. Просмотреть или задать заново список рабочих файлов.
+4. Добавить или удалить конкретное расширение из списка рабочих файлов.
+5. Просмотреть или изменить рабочую папку скрипта.
+6. Удалить временные файлы.
+7. Выполнить или изменить записанную команду.
+8. Просмотреть число строк и слов в каждом рабочем файле.
+9. Просмотреть объём каждого временного файла.
+
+Скрипт имеет два режима работы:
+- Интерактивный `./project.sh --interactive`
+- «Тихий» `./project.sh --action [1-16]`, позволяющий выполнить одну команду. Аргументы команды, если они требуются, вводятся отдельно.
 
 ## Особенности реализации
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc tempor, mauris non faucibus elementum, justo tellus laoreet ligula, a mattis sapien lectus et enim. Ut tincidunt hendrerit metus quis tempor. Nulla vel quam sed lacus ultricies pellentesque at sit amet ligula. Sed sodales in dui ac blandit. Duis turpis elit, malesuada in lacus eu, sodales vehicula justo. Aenean in tellus iaculis, tincidunt urna ut, ornare lectus. Phasellus tincidunt leo sed congue euismod. Vestibulum ac ex sodales, imperdiet lacus non, eleifend mauris. Integer pretium leo a mi gravida ultricies. Sed tempus augue nec lorem sollicitudin convallis. In nibh libero, pretium eu tristique sed, blandit vel est. Fusce tincidunt rutrum sollicitudin. Aliquam in tellus porttitor sapien scelerisque aliquam a sit amet diam. Phasellus magna nisi, malesuada a urna eu, mattis aliquam magna.
+- Все операции с файлом конфигурации через `sed`
+- При каждой операции файл конфигурации читается заново
+- Есть проверка безопасности только на (не)запуск от имени администратора
+- Есть проверка номера команды в интерактивном и тихом режимах
+- Выход из интерактивного режима с помощью команды `0`
 
-Aenean venenatis dui eros, in aliquam lectus interdum non. Aliquam varius, sapien id venenatis aliquam, arcu est aliquet felis, ut porttitor nibh tortor feugiat libero. Sed sit amet justo risus. Curabitur ullamcorper rhoncus magna, et bibendum dui consectetur gravida. Ut in vestibulum diam. Morbi vitae sollicitudin massa. Fusce imperdiet libero massa, vel ultricies diam suscipit id.
-
-Cras a lacus vitae mi sagittis ultrices. Donec non nibh eget purus eleifend placerat pulvinar in nisl. Nulla neque mauris, bibendum vitae tincidunt ac, luctus ut ex. Nullam at aliquam sem. Curabitur mollis orci id nisl accumsan, nec egestas diam malesuada. Fusce ut elementum dui. Pellentesque sed tempor lectus. Sed ac semper quam, sed maximus nisl. Phasellus in ex arcu. Nunc suscipit neque in sollicitudin fermentum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc tempor, mauris non faucibus elementum, justo tellus laoreet ligula, a mattis sapien lectus et enim. Ut tincidunt hendrerit metus quis tempor. Nulla vel quam sed lacus ultricies pellentesque at sit amet ligula. Sed sodales in dui ac blandit. Duis turpis elit, malesuada in lacus eu, sodales vehicula justo. Aenean in tellus iaculis, tincidunt urna ut, ornare lectus. Phasellus tincidunt leo sed congue euismod. Vestibulum ac ex sodales, imperdiet lacus non, eleifend mauris. Integer pretium leo a mi gravida ultricies. Sed tempus augue nec lorem sollicitudin convallis. In nibh libero, pretium eu tristique sed, blandit vel est. Fusce tincidunt rutrum sollicitudin. Aliquam in tellus porttitor sapien scelerisque aliquam a sit amet diam. Phasellus magna nisi, malesuada a urna eu, mattis aliquam magna.
-
-Aenean venenatis dui eros, in aliquam lectus interdum non. Aliquam varius, sapien id venenatis aliquam, arcu est aliquet felis, ut porttitor nibh tortor feugiat libero. Sed sit amet justo risus. Curabitur ullamcorper rhoncus magna, et bibendum dui consectetur gravida. Ut in vestibulum diam. Morbi vitae sollicitudin massa. Fusce imperdiet libero massa, vel ultricies diam suscipit id.
-
-Cras a lacus vitae mi sagittis ultrices. Donec non nibh eget purus eleifend placerat pulvinar in nisl. Nulla neque mauris, bibendum vitae tincidunt ac, luctus ut ex. Nullam at aliquam sem. Curabitur mollis orci id nisl accumsan, nec egestas diam malesuada. Fusce ut elementum dui. Pellentesque sed tempor lectus. Sed ac semper quam, sed maximus nisl. Phasellus in ex arcu. Nunc suscipit neque in sollicitudin fermentum.
 
 ## Тестовые случаи
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc tempor, mauris non faucibus elementum, justo tellus laoreet ligula, a mattis sapien lectus et enim. Ut tincidunt hendrerit metus quis tempor. Nulla vel quam sed lacus ultricies pellentesque at sit amet ligula. Sed sodales in dui ac blandit. Duis turpis elit, malesuada in lacus eu, sodales vehicula justo. Aenean in tellus iaculis, tincidunt urna ut, ornare lectus. Phasellus tincidunt leo sed congue euismod. Vestibulum ac ex sodales, imperdiet lacus non, eleifend mauris. Integer pretium leo a mi gravida ultricies. Sed tempus augue nec lorem sollicitudin convallis. In nibh libero, pretium eu tristique sed, blandit vel est. Fusce tincidunt rutrum sollicitudin. Aliquam in tellus porttitor sapien scelerisque aliquam a sit amet diam. Phasellus magna nisi, malesuada a urna eu, mattis aliquam magna.
-
-Aenean venenatis dui eros, in aliquam lectus interdum non. Aliquam varius, sapien id venenatis aliquam, arcu est aliquet felis, ut porttitor nibh tortor feugiat libero. Sed sit amet justo risus. Curabitur ullamcorper rhoncus magna, et bibendum dui consectetur gravida. Ut in vestibulum diam. Morbi vitae sollicitudin massa. Fusce imperdiet libero massa, vel ultricies diam suscipit id.
-
-Cras a lacus vitae mi sagittis ultrices. Donec non nibh eget purus eleifend placerat pulvinar in nisl. Nulla neque mauris, bibendum vitae tincidunt ac, luctus ut ex. Nullam at aliquam sem. Curabitur mollis orci id nisl accumsan, nec egestas diam malesuada. Fusce ut elementum dui. Pellentesque sed tempor lectus. Sed ac semper quam, sed maximus nisl. Phasellus in ex arcu. Nunc suscipit neque in sollicitudin fermentum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc tempor, mauris non faucibus elementum, justo tellus laoreet ligula, a mattis sapien lectus et enim. Ut tincidunt hendrerit metus quis tempor. Nulla vel quam sed lacus ultricies pellentesque at sit amet ligula. Sed sodales in dui ac blandit. Duis turpis elit, malesuada in lacus eu, sodales vehicula justo. Aenean in tellus iaculis, tincidunt urna ut, ornare lectus. Phasellus tincidunt leo sed congue euismod. Vestibulum ac ex sodales, imperdiet lacus non, eleifend mauris. Integer pretium leo a mi gravida ultricies. Sed tempus augue nec lorem sollicitudin convallis. In nibh libero, pretium eu tristique sed, blandit vel est. Fusce tincidunt rutrum sollicitudin. Aliquam in tellus porttitor sapien scelerisque aliquam a sit amet diam. Phasellus magna nisi, malesuada a urna eu, mattis aliquam magna.
-
-Aenean venenatis dui eros, in aliquam lectus interdum non. Aliquam varius, sapien id venenatis aliquam, arcu est aliquet felis, ut porttitor nibh tortor feugiat libero. Sed sit amet justo risus. Curabitur ullamcorper rhoncus magna, et bibendum dui consectetur gravida. Ut in vestibulum diam. Morbi vitae sollicitudin massa. Fusce imperdiet libero massa, vel ultricies diam suscipit id.
-
-Cras a lacus vitae mi sagittis ultrices. Donec non nibh eget purus eleifend placerat pulvinar in nisl. Nulla neque mauris, bibendum vitae tincidunt ac, luctus ut ex. Nullam at aliquam sem. Curabitur mollis orci id nisl accumsan, nec egestas diam malesuada. Fusce ut elementum dui. Pellentesque sed tempor lectus. Sed ac semper quam, sed maximus nisl. Phasellus in ex arcu. Nunc suscipit neque in sollicitudin fermentum.
+Empty
 
 
 ## Инструкции пользователя
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc tempor, mauris non faucibus elementum, justo tellus laoreet ligula, a mattis sapien lectus et enim. Ut tincidunt hendrerit metus quis tempor. Nulla vel quam sed lacus ultricies pellentesque at sit amet ligula. Sed sodales in dui ac blandit. Duis turpis elit, malesuada in lacus eu, sodales vehicula justo. Aenean in tellus iaculis, tincidunt urna ut, ornare lectus. Phasellus tincidunt leo sed congue euismod. Vestibulum ac ex sodales, imperdiet lacus non, eleifend mauris. Integer pretium leo a mi gravida ultricies. Sed tempus augue nec lorem sollicitudin convallis. In nibh libero, pretium eu tristique sed, blandit vel est. Fusce tincidunt rutrum sollicitudin. Aliquam in tellus porttitor sapien scelerisque aliquam a sit amet diam. Phasellus magna nisi, malesuada a urna eu, mattis aliquam magna.
+Empty
 
-Aenean venenatis dui eros, in aliquam lectus interdum non. Aliquam varius, sapien id venenatis aliquam, arcu est aliquet felis, ut porttitor nibh tortor feugiat libero. Sed sit amet justo risus. Curabitur ullamcorper rhoncus magna, et bibendum dui consectetur gravida. Ut in vestibulum diam. Morbi vitae sollicitudin massa. Fusce imperdiet libero massa, vel ultricies diam suscipit id.
+## Листинг исходного кода
 
-Cras a lacus vitae mi sagittis ultrices. Donec non nibh eget purus eleifend placerat pulvinar in nisl. Nulla neque mauris, bibendum vitae tincidunt ac, luctus ut ex. Nullam at aliquam sem. Curabitur mollis orci id nisl accumsan, nec egestas diam malesuada. Fusce ut elementum dui. Pellentesque sed tempor lectus. Sed ac semper quam, sed maximus nisl. Phasellus in ex arcu. Nunc suscipit neque in sollicitudin fermentum.
 
-# Листинг исходного кода
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc tempor, mauris non faucibus elementum, justo tellus laoreet ligula, a mattis sapien lectus et enim. Ut tincidunt hendrerit metus quis tempor. Nulla vel quam sed lacus ultricies pellentesque at sit amet ligula. Sed sodales in dui ac blandit. Duis turpis elit, malesuada in lacus eu, sodales vehicula justo. Aenean in tellus iaculis, tincidunt urna ut, ornare lectus. Phasellus tincidunt leo sed congue euismod. Vestibulum ac ex sodales, imperdiet lacus non, eleifend mauris. Integer pretium leo a mi gravida ultricies. Sed tempus augue nec lorem sollicitudin convallis. In nibh libero, pretium eu tristique sed, blandit vel est. Fusce tincidunt rutrum sollicitudin. Aliquam in tellus porttitor sapien scelerisque aliquam a sit amet diam. Phasellus magna nisi, malesuada a urna eu, mattis aliquam magna.
-
-Aenean venenatis dui eros, in aliquam lectus interdum non. Aliquam varius, sapien id venenatis aliquam, arcu est aliquet felis, ut porttitor nibh tortor feugiat libero. Sed sit amet justo risus. Curabitur ullamcorper rhoncus magna, et bibendum dui consectetur gravida. Ut in vestibulum diam. Morbi vitae sollicitudin massa. Fusce imperdiet libero massa, vel ultricies diam suscipit id.
-
-Cras a lacus vitae mi sagittis ultrices. Donec non nibh eget purus eleifend placerat pulvinar in nisl. Nulla neque mauris, bibendum vitae tincidunt ac, luctus ut ex. Nullam at aliquam sem. Curabitur mollis orci id nisl accumsan, nec egestas diam malesuada. Fusce ut elementum dui. Pellentesque sed tempor lectus. Sed ac semper quam, sed maximus nisl. Phasellus in ex arcu. Nunc suscipit neque in sollicitudin fermentum.
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc tempor, mauris non faucibus elementum, justo tellus laoreet ligula, a mattis sapien lectus et enim. Ut tincidunt hendrerit metus quis tempor. Nulla vel quam sed lacus ultricies pellentesque at sit amet ligula. Sed sodales in dui ac blandit. Duis turpis elit, malesuada in lacus eu, sodales vehicula justo. Aenean in tellus iaculis, tincidunt urna ut, ornare lectus. Phasellus tincidunt leo sed congue euismod. Vestibulum ac ex sodales, imperdiet lacus non, eleifend mauris. Integer pretium leo a mi gravida ultricies. Sed tempus augue nec lorem sollicitudin convallis. In nibh libero, pretium eu tristique sed, blandit vel est. Fusce tincidunt rutrum sollicitudin. Aliquam in tellus porttitor sapien scelerisque aliquam a sit amet diam. Phasellus magna nisi, malesuada a urna eu, mattis aliquam magna.
-
-Aenean venenatis dui eros, in aliquam lectus interdum non. Aliquam varius, sapien id venenatis aliquam, arcu est aliquet felis, ut porttitor nibh tortor feugiat libero. Sed sit amet justo risus. Curabitur ullamcorper rhoncus magna, et bibendum dui consectetur gravida. Ut in vestibulum diam. Morbi vitae sollicitudin massa. Fusce imperdiet libero massa, vel ultricies diam suscipit id.
-
-Cras a lacus vitae mi sagittis ultrices. Donec non nibh eget purus eleifend placerat pulvinar in nisl. Nulla neque mauris, bibendum vitae tincidunt ac, luctus ut ex. Nullam at aliquam sem. Curabitur mollis orci id nisl accumsan, nec egestas diam malesuada. Fusce ut elementum dui. Pellentesque sed tempor lectus. Sed ac semper quam, sed maximus nisl. Phasellus in ex arcu. Nunc suscipit neque in sollicitudin fermentum.
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc tempor, mauris non faucibus elementum, justo tellus laoreet ligula, a mattis sapien lectus et enim. Ut tincidunt hendrerit metus quis tempor. Nulla vel quam sed lacus ultricies pellentesque at sit amet ligula. Sed sodales in dui ac blandit. Duis turpis elit, malesuada in lacus eu, sodales vehicula justo. Aenean in tellus iaculis, tincidunt urna ut, ornare lectus. Phasellus tincidunt leo sed congue euismod. Vestibulum ac ex sodales, imperdiet lacus non, eleifend mauris. Integer pretium leo a mi gravida ultricies. Sed tempus augue nec lorem sollicitudin convallis. In nibh libero, pretium eu tristique sed, blandit vel est. Fusce tincidunt rutrum sollicitudin. Aliquam in tellus porttitor sapien scelerisque aliquam a sit amet diam. Phasellus magna nisi, malesuada a urna eu, mattis aliquam magna.
-
-Aenean venenatis dui eros, in aliquam lectus interdum non. Aliquam varius, sapien id venenatis aliquam, arcu est aliquet felis, ut porttitor nibh tortor feugiat libero. Sed sit amet justo risus. Curabitur ullamcorper rhoncus magna, et bibendum dui consectetur gravida. Ut in vestibulum diam. Morbi vitae sollicitudin massa. Fusce imperdiet libero massa, vel ultricies diam suscipit id.
-
-Cras a lacus vitae mi sagittis ultrices. Donec non nibh eget purus eleifend placerat pulvinar in nisl. Nulla neque mauris, bibendum vitae tincidunt ac, luctus ut ex. Nullam at aliquam sem. Curabitur mollis orci id nisl accumsan, nec egestas diam malesuada. Fusce ut elementum dui. Pellentesque sed tempor lectus. Sed ac semper quam, sed maximus nisl. Phasellus in ex arcu. Nunc suscipit neque in sollicitudin fermentum.
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc tempor, mauris non faucibus elementum, justo tellus laoreet ligula, a mattis sapien lectus et enim. Ut tincidunt hendrerit metus quis tempor. Nulla vel quam sed lacus ultricies pellentesque at sit amet ligula. Sed sodales in dui ac blandit. Duis turpis elit, malesuada in lacus eu, sodales vehicula justo. Aenean in tellus iaculis, tincidunt urna ut, ornare lectus. Phasellus tincidunt leo sed congue euismod. Vestibulum ac ex sodales, imperdiet lacus non, eleifend mauris. Integer pretium leo a mi gravida ultricies. Sed tempus augue nec lorem sollicitudin convallis. In nibh libero, pretium eu tristique sed, blandit vel est. Fusce tincidunt rutrum sollicitudin. Aliquam in tellus porttitor sapien scelerisque aliquam a sit amet diam. Phasellus magna nisi, malesuada a urna eu, mattis aliquam magna.
-
-Aenean venenatis dui eros, in aliquam lectus interdum non. Aliquam varius, sapien id venenatis aliquam, arcu est aliquet felis, ut porttitor nibh tortor feugiat libero. Sed sit amet justo risus. Curabitur ullamcorper rhoncus magna, et bibendum dui consectetur gravida. Ut in vestibulum diam. Morbi vitae sollicitudin massa. Fusce imperdiet libero massa, vel ultricies diam suscipit id.
-
-Cras a lacus vitae mi sagittis ultrices. Donec non nibh eget purus eleifend placerat pulvinar in nisl. Nulla neque mauris, bibendum vitae tincidunt ac, luctus ut ex. Nullam at aliquam sem. Curabitur mollis orci id nisl accumsan, nec egestas diam malesuada. Fusce ut elementum dui. Pellentesque sed tempor lectus. Sed ac semper quam, sed maximus nisl. Phasellus in ex arcu. Nunc suscipit neque in sollicitudin fermentum.
-
-[Файл кода](project.sh)
+[<Файл кода>](project.sh)
