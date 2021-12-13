@@ -255,7 +255,7 @@ fi
 name=`basename $0`
 
 # Работа в интерактивном режиме
-if [ "$1" == "--help" ]; then
+if [ "$1" == "--help" ]; then # вывод справки
   echo "Использование: ./$name --interactive"
   echo "          либо ./$name --action [1-15]"
   echo "          либо ./$name --help , чтобы показать это сообщение и меню"
@@ -276,7 +276,7 @@ elif [ "$1" == "--interactive" ]; then
     read comm
   done
   echo "Завершение."
-elif [ "$1" == "--action" ]; then
+elif [ "$1" == "--action" ]; then # Работа в тихом режиме
   startupConfig
   comm=$2
   if commCorrect; then
@@ -286,7 +286,7 @@ elif [ "$1" == "--action" ]; then
     echo "Неверный номер команды" >&2
     exit 1
   fi
-else
+else # неправильный первый параметр
   echo "Использование: ./$name --interactive" >&2
   echo "          либо ./$name --action [1-15]" >&2
   echo "          либо ./$name --help , чтобы показать это сообщение и меню" >&2
