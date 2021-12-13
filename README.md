@@ -2,8 +2,8 @@
 
 #### Выполнил: Тихоненко Артём, ИУ7-15Б
 
-[Отчёт](./otchet.pdf)
+Отчёт - `./otchet.pdf`
 
-[Документация](./documentation.pdf)
+Документация - `./documentation.pdf`
 
-[Исходный код](./project.pdf)
+Исходный код - `./project.pdf`
