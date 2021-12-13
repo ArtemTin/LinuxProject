@@ -87,5 +87,6 @@ Empty
 ## Листинг исходного кода
 
 
-[<PDF кода>](./project.pdf)
-[<Файл кода>](./project.sh)
+[Код в пдф](./project.pdf)
+
+[Файл кода](./project.sh)
