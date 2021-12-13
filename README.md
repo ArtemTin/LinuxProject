@@ -4,4 +4,6 @@
 
 [Отчёт](./otchet.md)
 
-[Документация пользователя](./documentation.md)
+[Документация](./documentation.md)
+
+[Исходный код](./project.sh)
