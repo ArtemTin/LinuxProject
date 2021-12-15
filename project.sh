@@ -152,7 +152,7 @@ cleanupTmp() {
 # 12 Исполняет команду в рабочей директории
 execProg() {
   prog=$(sed -n '3p' 'conf.myconfig')
-  $("$prog")
+  $prog
 }
 
 
@@ -231,7 +231,9 @@ printmenu() {
 
 commandSelector() {
   commm=$1
-  if [ $commm -eq 1 ]; then
+  if [ $comm -eq 0 ]; then
+    echo "Завершение"
+  elif [ $commm -eq 1 ]; then
     showTmp
   elif [ $commm -eq 2 ]; then
     redefineTmp
@@ -308,15 +310,19 @@ elif [ "$1" == "--interactive" ]; then
 elif [ "$1" == "--action" ]; then # Работа в тихом режиме
   startupConfig
   comm=$2
-  if commCorrect; then
-    commandSelector $comm
-  else
-    echo "Неверный номер команды" >&2
-    exit 1
-  fi
+  until [ "$comm" == "" ]; do
+    if commCorrect; then
+      commandSelector $comm
+    else
+      echo "Неверный номер команды: $comm" >&2
+      exit 1
+    fi
+    shift
+    comm=$2
+  done
 else # неправильный первый параметр
   echo "Использование: ./$name --interactive" >&2
-  echo "          либо ./$name --action [1-15]" >&2
+  echo "          либо ./$name --action [0-16]? [0-16]*" >&2
   echo "          либо ./$name --help , чтобы показать это сообщение и меню" >&2
   exit 1
 fi
