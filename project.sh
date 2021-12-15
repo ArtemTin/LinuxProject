@@ -1,5 +1,4 @@
 #!/bin/bash
-echo 'Hello, world!'
 
 
 # Проверка структуры файла конфигурации
@@ -21,15 +20,14 @@ initConfig() {
 # Проверка существования и корректности файла конфигурации
 startupConfig() {
   if [ -e "conf.myconfig" ]; then
-    echo "config file exists"
     if [ checkConfig ]; then
-      echo "config file is OK"
+      echo "config file found"
     else
       echo "config file is damaged, restoring default state"
       initConfig
     fi
   else
-    echo "no config file"
+    echo "config file created"
     initConfig
   fi
 }
@@ -50,7 +48,8 @@ commCorrect() {
 
 # 1 Показывает список расширений временных файлов
 showTmp() {
-  sed -n '1p' "conf.myconfig"
+  extensions=$(sed -n '1p' "conf.myconfig")
+  echo "Расширения временных файлов: $extensions"
 }
 
 
@@ -87,7 +86,8 @@ removeTmp() {
 
 # 5 Показать список расширений рабочих файлов
 showWorking() {
-  sed -n '2p' 'conf.myconfig'
+  extensions=$(sed -n '2p' 'conf.myconfig')
+  echo "Расширения рабочих файлов: $extensions"
 }
 
 
@@ -310,7 +310,6 @@ elif [ "$1" == "--action" ]; then # Работа в тихом режиме
   comm=$2
   if commCorrect; then
     commandSelector $comm
-    echo "Завершение"
   else
     echo "Неверный номер команды" >&2
     exit 1
