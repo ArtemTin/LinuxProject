@@ -1,20 +1,22 @@
 #!/bin/bash
 echo 'Hello, world!'
 
+
 # Проверка структуры файла конфигурации
 checkConfig() {
   echo "config check not implemented"
   return
 }
 
+
 # Создание нового файла конфигурации, если его не было или он поврежден
 initConfig() {
   touch conf.myconfig
   echo '*.log ' > conf.myconfig
   echo '*.txt ' >> conf.myconfig
-  echo 'grep error* last.txt>last.log' >> conf.myconfig
-  echo "$PWD" >> conf.myconfig
+  echo 'grep "error*" last.txt > last.log' >> conf.myconfig
 }
+
 
 # Проверка существования и корректности файла конфигурации
 startupConfig() {
@@ -22,8 +24,6 @@ startupConfig() {
     echo "config file exists"
     if [ checkConfig ]; then
       echo "config file is OK"
-      wd=$(sed -n '4p' 'conf.myconfig')
-      cd $wd
     else
       echo "config file is damaged, restoring default state"
       initConfig
@@ -34,12 +34,13 @@ startupConfig() {
   fi
 }
 
+
 # Проверка корректности ввода номера команды
 # params: comm
 commCorrect() {
   if ! echo "$comm" | grep -Eq "^[0-9][0-9]*$" ; then
     return 1
-  elif [ "$comm" -ge 1 -a "$comm" -le 15 ]; then
+  elif [ "$comm" -ge 0 -a "$comm" -le 16 ]; then
     return 0
   else
     return 1
@@ -49,17 +50,18 @@ commCorrect() {
 
 # 1 Показывает список расширений временных файлов
 showTmp() {
-  sed -n '1p' 'conf.myconfig'
+  sed -n '1p' "conf.myconfig"
 }
+
 
 # 2 Вбить список расширений временных файлов заново
 redefineTmp() {
-  #prev_tmp=$(sed -n '1p' 'conf.myconfig')
   echo -n 'Введите новый список расширений временных файлов: '
   read new_tmp
   new_tmp=$new_tmp" "
   sed -i '' "1s/.*/$new_tmp/g" 'conf.myconfig'
 }
+
 
 # 3 Добавить расширение в список расширений временных файлов
 addTmp() {
@@ -71,6 +73,7 @@ addTmp() {
   sed -i '' "1s/.*/$tmp/g" 'conf.myconfig'
 }
 
+
 # 4 Удалить расширение из списка расширений временных файлов
 removeTmp() {
   prev_tmp=$(sed -n '1p' 'conf.myconfig')
@@ -81,10 +84,12 @@ removeTmp() {
   sed -i '' "1s/$del_tmp//g" 'conf.myconfig'
 }
 
+
 # 5 Показать список расширений рабочих файлов
 showWorking() {
   sed -n '2p' 'conf.myconfig'
 }
+
 
 # 6 Перезадать список расширений рабочих файлов
 redefineWorking() {
@@ -94,6 +99,7 @@ redefineWorking() {
   sed -i '' "2s/.*/$new_wrk/g" 'conf.myconfig'
 
 }
+
 
 # 7 Добавить расширение в список расширений рабочих файлов
 addWorking() {
@@ -105,6 +111,7 @@ addWorking() {
   sed -i '' "2s/.*/$wrk/g" 'conf.myconfig'
 }
 
+
 # 8 Удалить расширение из списка расширений рабочих файлов
 removeWorking() {
   prev_wrk=$(sed -n '2p' 'conf.myconfig')
@@ -115,21 +122,23 @@ removeWorking() {
   sed -i '' "2s/$del_wrk//g" 'conf.myconfig'
 }
 
+
 # 9 Показывает текущую рабочую директорию скрипта
 showCWD() {
   echo "Текущий каталог: $(PWD)"
 }
 
+
 # 10 Изменяет текущую рабочую директорию скрипта
 changeCWD() {
-  prev_wd=$(sed -n '4p' 'conf.myconfig')
+  prev_wd=$(PWD)
   echo "Текущий полный путь: $prev_wd"
   echo -n 'Введите полный или относительный путь новой директории (как для cd): '
   read newwd
   cd $newwd
-  cp "$prev_wd/conf.myconfig" "$(PWD)/conf.myconfig"
-  sed -i '' "4s/$prev_wd/$newwd/g" 'conf.myconfig'
+  cp -n "$prev_wd/conf.myconfig" "$(PWD)/conf.myconfig"
 }
+
 
 # 11 Удаляет все файлы, подходящие по расширению как "временные"
 cleanupTmp() {
@@ -139,11 +148,13 @@ cleanupTmp() {
   done
 }
 
+
 # 12 Исполняет команду в рабочей директории
 execProg() {
   prog=$(sed -n '3p' 'conf.myconfig')
-  exec $prog
+  $("$prog")
 }
+
 
 # 13 Изменяет исполняемую команду
 changeProg() {
@@ -151,12 +162,12 @@ changeProg() {
   echo "Текущая команда: $prog"
   echo -n "Введите новую команду: "
   read newcomm
-  sed -i '' "3s/.*/$$newcomm/g" 'conf.myconfig'
+  sed -i '' "3s/.*/$newcomm/g" 'conf.myconfig'
 }
 
-# 14 Показывает кол-во строк и слов в текстовом файле
+
+# (вспомогательная) Показывает кол-во строк и слов в текстовом файле
 showLinesAndWords() {
-  echo "file: $filename"
   linesdirty=$(wc -l $filename)
   lines=($linesdirty)
   wordsdirty=$(wc -w $filename)
@@ -164,7 +175,8 @@ showLinesAndWords() {
   echo "$filename words: $words lines: $lines"
 }
 
-# 15 Для каждого файла, подходящего по расширению как "рабочий", показывает кол-во строк и слов
+
+# 14 Для каждого файла, подходящего по расширению как "рабочий", показывает кол-во строк и слов
 showForEveryWorking() {
   extensions=$(sed -n '2p' 'conf.myconfig')
   for ext in $extensions; do
@@ -176,7 +188,8 @@ showForEveryWorking() {
   done
 }
 
-# 16 Для каждого файла, подходящего по расширению как "временный", показывает его размер
+
+# 15 Для каждого файла, подходящего по расширению как "временный", показывает его размер
 showJunkSize() {
   extensions=$(sed -n '1p' 'conf.myconfig')
   for ext in $extensions; do
@@ -186,6 +199,14 @@ showJunkSize() {
     done
   done
 }
+
+
+# 16 Показать записанную программу
+showProg() {
+  prog=$(sed -n '3p' 'conf.myconfig')
+  echo "Записанная команда: $prog"
+}
+
 
 printmenu() {
   echo "0. Завершение программы"
@@ -198,17 +219,15 @@ printmenu() {
   echo "7. Добавить расширение в список расширений РАБОЧИХ файлов"
   echo "8. Удалить расширение из списка расширений РАБОЧИХ файлов (по имени расширения)"
   echo "9. Показать текущую рабочую директорию"
-  echo "10. Сменить рабочую директорию (! конфигурация копируется в новое место с перезаписью)"
+  echo "10. Сменить рабочую директорию (файл конфигурации копируется, если его еще нет в директории)"
   echo "11. Удалить все ВРЕМЕННЫЕ файлы"
   echo "12. Исполнить команду из файла конфигурации"
   echo "13. Изменить выполняемую команду"
   echo "14. Показать кол-во слов и строк для каждого РАБОЧЕГО файла"
   echo "15. Показать размер каждого ВРЕМЕННОГО файла"
+  echo "16. Показать записанную команду"
 }
 
-silentArgsCorrect() {
-  echo "not implemented"
-}
 
 commandSelector() {
   commm=$1
@@ -242,9 +261,13 @@ commandSelector() {
     showForEveryWorking
   elif [ $commm -eq 15 ]; then
     showJunkSize
+  elif [ $comm -eq 16 ]; then
+    showProg
   fi
 
 }
+
+
 
 # Проверка, от чьего имени запущена программа
 if [ "$(id -u)" -eq 0 ]; then
@@ -263,17 +286,23 @@ if [ "$1" == "--help" ]; then # вывод справки
 elif [ "$1" == "--interactive" ]; then
   startupConfig
   printmenu
+
   echo -n "Введите команду: "
   read comm
+  until commCorrect; do
+    echo -n 'Неверная команда, повторите ввод: '
+    read comm
+  done
+
   while [ "$comm" -ne 0 ]; do
-    until commCorrect; do
-      echo -n 'Неверная команда, повторите ввод: '
-      read comm
-    done
     commandSelector $comm
     printmenu
     echo -n "Введите команду: "
     read comm
+    until commCorrect; do
+      echo -n 'Неверная команда, повторите ввод: '
+      read comm
+    done
   done
   echo "Завершение."
 elif [ "$1" == "--action" ]; then # Работа в тихом режиме

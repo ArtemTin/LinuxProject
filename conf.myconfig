@@ -1,4 +1,3 @@
-*.log 
-*.txt 
-grep error* last.txt>last.log
-/Users/tinartem/Developer/LinuxProject
+*.log
+*.txt
+grep "error*" last.txt > last.log
