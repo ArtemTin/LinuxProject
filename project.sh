@@ -21,13 +21,13 @@ initConfig() {
 startupConfig() {
   if [ -e "conf.myconfig" ]; then
     if [ checkConfig ]; then
-      echo "config file found"
+      echo "$(tput setaf 2)config file found $(tput sgr 0)"
     else
       echo "config file is damaged, restoring default state"
       initConfig
     fi
   else
-    echo "config file created"
+    echo "$(tput setaf 2) config file created $(tput sgr 0)"
     initConfig
   fi
 }
@@ -46,14 +46,14 @@ commCorrect() {
 }
 
 
-# 1 Показывает список расширений временных файлов
+# Показывает список расширений временных файлов
 showTmp() {
   extensions=$(sed -n '1p' "conf.myconfig")
   echo "Расширения временных файлов: $extensions"
 }
 
 
-# 2 Вбить список расширений временных файлов заново
+# Вбить список расширений временных файлов заново
 redefineTmp() {
   echo -n 'Введите новый список расширений временных файлов: '
   read new_tmp
@@ -62,7 +62,7 @@ redefineTmp() {
 }
 
 
-# 3 Добавить расширение в список расширений временных файлов
+# Добавить расширение в список расширений временных файлов
 addTmp() {
   prev_tmp=$(sed -n '1p' 'conf.myconfig')
   echo "Список расширений сейчас: $prev_tmp"
@@ -73,7 +73,7 @@ addTmp() {
 }
 
 
-# 4 Удалить расширение из списка расширений временных файлов
+# Удалить расширение из списка расширений временных файлов
 removeTmp() {
   prev_tmp=$(sed -n '1p' 'conf.myconfig')
   echo "Список расширений сейчас: $prev_tmp"
@@ -84,14 +84,14 @@ removeTmp() {
 }
 
 
-# 5 Показать список расширений рабочих файлов
+# Показать список расширений рабочих файлов
 showWorking() {
   extensions=$(sed -n '2p' 'conf.myconfig')
   echo "Расширения рабочих файлов: $extensions"
 }
 
 
-# 6 Перезадать список расширений рабочих файлов
+# Перезадать список расширений рабочих файлов
 redefineWorking() {
   echo -n 'Введите новый список расширений временных файлов: '
   read new_wrk
@@ -101,7 +101,7 @@ redefineWorking() {
 }
 
 
-# 7 Добавить расширение в список расширений рабочих файлов
+# Добавить расширение в список расширений рабочих файлов
 addWorking() {
   prev_wrk=$(sed -n '2p' 'conf.myconfig')
   echo "Список расширений сейчас: $prev_wrk"
@@ -112,7 +112,7 @@ addWorking() {
 }
 
 
-# 8 Удалить расширение из списка расширений рабочих файлов
+# Удалить расширение из списка расширений рабочих файлов
 removeWorking() {
   prev_wrk=$(sed -n '2p' 'conf.myconfig')
   echo "Список расширений сейчас: $prev_wrk"
@@ -123,13 +123,13 @@ removeWorking() {
 }
 
 
-# 9 Показывает текущую рабочую директорию скрипта
+# Показывает текущую рабочую директорию скрипта
 showCWD() {
   echo "Текущий каталог: $(PWD)"
 }
 
 
-# 10 Изменяет текущую рабочую директорию скрипта
+# Изменяет текущую рабочую директорию скрипта
 changeCWD() {
   prev_wd=$(PWD)
   echo "Текущий полный путь: $prev_wd"
@@ -140,7 +140,7 @@ changeCWD() {
 }
 
 
-# 11 Удаляет все файлы, подходящие по расширению как "временные"
+# Удаляет все файлы, подходящие по расширению как "временные"
 cleanupTmp() {
   extensions=$(sed -n '1p' 'conf.myconfig')
   for ext in $extensions; do
@@ -149,14 +149,14 @@ cleanupTmp() {
 }
 
 
-# 12 Исполняет команду в рабочей директории
+# Исполняет команду в рабочей директории
 execProg() {
   prog=$(sed -n '3p' 'conf.myconfig')
   $prog
 }
 
 
-# 13 Изменяет исполняемую команду
+# Изменяет исполняемую команду
 changeProg() {
   prog=$(sed -n '3p' 'conf.myconfig')
   echo "Текущая команда: $prog"
@@ -176,11 +176,14 @@ showLinesAndWords() {
 }
 
 
-# 14 Для каждого файла, подходящего по расширению как "рабочий", показывает кол-во строк и слов
+# Для каждого файла, подходящего по расширению как "рабочий", показывает кол-во строк и слов
 showForEveryWorking() {
   extensions=$(sed -n '2p' 'conf.myconfig')
   for ext in $extensions; do
     files=$(find . -type f -name "$ext")
+    if [ -z "$files" ]; then
+      echo "Файлов с расширением $ext не нашлось"
+    fi
     for file in $files; do
       filename=$file
       showLinesAndWords
@@ -189,11 +192,14 @@ showForEveryWorking() {
 }
 
 
-# 15 Для каждого файла, подходящего по расширению как "временный", показывает его размер
+# Для каждого файла, подходящего по расширению как "временный", показывает его размер
 showJunkSize() {
   extensions=$(sed -n '1p' 'conf.myconfig')
   for ext in $extensions; do
     files=$(find . -type f -name "$ext")
+    if [ -z "$files" ]; then
+      echo "Файлов с расширением $ext не нашлось"
+    fi
     for file in $files; do
       du $file
     done
@@ -201,7 +207,7 @@ showJunkSize() {
 }
 
 
-# 16 Показать записанную программу
+# Показать записанную программу
 showProg() {
   prog=$(sed -n '3p' 'conf.myconfig')
   echo "Записанная команда: $prog"
@@ -209,62 +215,80 @@ showProg() {
 
 
 printmenu() {
+  echo "$(tput setaf  6)1.$(tput setaf  3) Перезадать список расширений ВРЕМЕННЫХ файлов"
+  echo "$(tput setaf 6)2.$(tput setaf  3) Добавить расширение в список расширений ВРЕМЕННЫХ файлов"
+  echo "$(tput setaf 6)3.$(tput setaf  3) Удалить расширение из списка расширений ВРЕМЕННЫХ файлов (по имени)"
+  echo "$(tput setaf 6)4.$(tput setaf  3) Перезадать список расширений РАБОЧИХ файлов"
+  echo "$(tput setaf 6)5.$(tput setaf  3) Добавить расширение в список расширений РАБОЧИХ файлов"
+  echo "$(tput setaf 6)6.$(tput setaf  3) Удалить расширение из списка расширений РАБОЧИХ файлов (по имени)"
+  echo "$(tput setaf 6)7.$(tput setaf  3) Сменить рабочую директорию"
+  echo "$(tput setaf 6)8.$(tput setaf  3) Удалить все ВРЕМЕННЫЕ файлы"
+  echo "$(tput setaf 6)9.$(tput setaf  3) Исполнить команду из файла конфигурации"
+  echo "$(tput setaf 6)10.$(tput setaf  3) Изменить выполняемую команду"
+  echo "$(tput setaf 6)11.$(tput setaf  3) Показать кол-во слов и строк для каждого РАБОЧЕГО файла"
+  echo "$(tput setaf 6)12.$(tput setaf  3) Показать размер каждого ВРЕМЕННОГО файла"
+  echo "$(tput setaf 6)13.$(tput setaf  3) Показать записанную команду"
+  echo "$(tput setaf 1)0.$(tput setaf  3) Завершение программы $(tput sgr 0)"
+}
+
+printFullMenu() {
+  echo "1. Перезадать список расширений ВРЕМЕННЫХ файлов"
+  echo "2. Добавить расширение в список расширений ВРЕМЕННЫХ файлов"
+  echo "3. Удалить расширение из списка расширений ВРЕМЕННЫХ файлов (по имени расширения)"
+  echo "4. Перезадать список расширений РАБОЧИХ файлов"
+  echo "5. Добавить расширение в список расширений РАБОЧИХ файлов"
+  echo "6. Удалить расширение из списка расширений РАБОЧИХ файлов (по имени расширения)"
+  echo "7. Сменить рабочую директорию"
+  echo "8. Удалить все ВРЕМЕННЫЕ файлы"
+  echo "9. Исполнить команду из файла конфигурации"
+  echo "10. Изменить выполняемую команду"
+  echo "11. Показать кол-во слов и строк для каждого РАБОЧЕГО файла"
+  echo "12. Показать размер каждого ВРЕМЕННОГО файла"
+  echo "13. Показать записанную команду"
+  echo "14. Показать список ВРЕМЕННЫХ файлов"
+  echo "15. Показать список РАБОЧИХ файлов"
+  echo "16. Показать рабочую директорию"
   echo "0. Завершение программы"
-  echo "1. Показать список расширений ВРЕМЕННЫХ файлов"
-  echo "2. Перезадать список расширений ВРЕМЕННЫХ файлов"
-  echo "3. Добавить расширение в список расширений ВРЕМЕННЫХ файлов"
-  echo "4. Удалить расширение из списка расширений ВРЕМЕННЫХ файлов (по имени расширения)"
-  echo "5. Показать список расширений РАБОЧИХ файлов"
-  echo "6. Перезадать список расширений РАБОЧИХ файлов"
-  echo "7. Добавить расширение в список расширений РАБОЧИХ файлов"
-  echo "8. Удалить расширение из списка расширений РАБОЧИХ файлов (по имени расширения)"
-  echo "9. Показать текущую рабочую директорию"
-  echo "10. Сменить рабочую директорию (файл конфигурации копируется, если его еще нет в директории)"
-  echo "11. Удалить все ВРЕМЕННЫЕ файлы"
-  echo "12. Исполнить команду из файла конфигурации"
-  echo "13. Изменить выполняемую команду"
-  echo "14. Показать кол-во слов и строк для каждого РАБОЧЕГО файла"
-  echo "15. Показать размер каждого ВРЕМЕННОГО файла"
-  echo "16. Показать записанную команду"
 }
 
 
 commandSelector() {
   commm=$1
-  if [ $comm -eq 0 ]; then
-    echo "Завершение"
-  elif [ $commm -eq 1 ]; then
-    showTmp
-  elif [ $commm -eq 2 ]; then
+  if [ $commm -eq 1 ]; then
     redefineTmp
-  elif [ $commm -eq 3 ]; then
+  elif [ $commm -eq 2 ]; then
     addTmp
-  elif [ $commm -eq 4 ]; then
+  elif [ $commm -eq 3 ]; then
     removeTmp
-  elif [ $commm -eq 5 ]; then
-    showWorking
-  elif [ $commm -eq 6 ]; then
+  elif [ $commm -eq 4 ]; then
     redefineWorking
-  elif [ $commm -eq 7 ]; then
+  elif [ $commm -eq 5 ]; then
     addWorking
-  elif [ $commm -eq 8 ]; then
+  elif [ $commm -eq 6 ]; then
     removeWorking
-  elif [ $commm -eq 9 ]; then
-    showCWD
-  elif [ $commm -eq 10 ]; then
+  elif [ $commm -eq 7 ]; then
     changeCWD
-  elif [ $commm -eq 11 ]; then
+  elif [ $commm -eq 8 ]; then
     cleanupTmp
-  elif [ $commm -eq 12 ]; then
+  elif [ $commm -eq 9 ]; then
     execProg
-  elif [ $commm -eq 13 ]; then
+  elif [ $commm -eq 10 ]; then
     changeProg
-  elif [ $commm -eq 14 ]; then
+  elif [ $commm -eq 11 ]; then
     showForEveryWorking
-  elif [ $commm -eq 15 ]; then
+  elif [ $commm -eq 12 ]; then
     showJunkSize
-  elif [ $comm -eq 16 ]; then
+  elif [ $commm -eq 13 ]; then
     showProg
+  elif [ $commm -eq 14 ]; then
+    showTmp
+  elif [ $commm -eq 15 ]; then
+    showWorking
+  elif [ $commm -eq 16 ]; then
+    showCWD
+  elif [ $comm -eq 0 ]; then
+    echo "Завершение"
+    exit
   fi
 
 }
@@ -282,47 +306,54 @@ name=`basename $0`
 # Работа в интерактивном режиме
 if [ "$1" == "--help" ]; then # вывод справки
   echo "Использование: ./$name --interactive"
-  echo "          либо ./$name --action [1-15]"
+  echo "          либо ./$name --action [0-16]? [0-16]*"
   echo "          либо ./$name --help , чтобы показать это сообщение и меню"
-  printmenu
+  printFullMenu
 elif [ "$1" == "--interactive" ]; then
   startupConfig
   printmenu
+  showTmp
+  showWorking
+  showCWD
 
-  echo -n "Введите команду: "
+  echo -n "$(tput setaf 4)Введите команду: $(tput sgr 0)"
   read comm
   until commCorrect; do
-    echo -n 'Неверная команда, повторите ввод: '
+    echo -n "$(tput setaf 1)Неверная команда,$(tput sgr 0) $(tput setaf 4)повторите ввод: $(tput sgr 0)"
     read comm
   done
 
   while [ "$comm" -ne 0 ]; do
     commandSelector $comm
     printmenu
-    echo -n "Введите команду: "
+    showTmp
+    showWorking
+    showCWD
+    echo -n "$(tput setaf 4)Введите команду: $(tput sgr 0)"
     read comm
     until commCorrect; do
-      echo -n 'Неверная команда, повторите ввод: '
+      echo -n "$(tput setaf 1)Неверная команда,$(tput sgr 0) $(tput setaf 4)повторите ввод: $(tput sgr 0)"
       read comm
     done
   done
-  echo "Завершение."
+  echo "$(tput setaf 2)Завершение. $(tput sgr 0)"
 elif [ "$1" == "--action" ]; then # Работа в тихом режиме
   startupConfig
   comm=$2
   until [ "$comm" == "" ]; do
     if commCorrect; then
+      echo "$(tput setaf 3)Выполнение команды $comm$(tput sgr 0)"
       commandSelector $comm
     else
-      echo "Неверный номер команды: $comm" >&2
+      echo "$(tput setaf 1)Неверный номер команды:$(tput sgr 0) $comm" >&2
       exit 1
     fi
     shift
     comm=$2
   done
 else # неправильный первый параметр
-  echo "Использование: ./$name --interactive" >&2
+  echo "$(tput setaf 1)Использование: ./$name --interactive" >&2
   echo "          либо ./$name --action [0-16]? [0-16]*" >&2
-  echo "          либо ./$name --help , чтобы показать это сообщение и меню" >&2
+  echo "          либо ./$name --help , чтобы показать это сообщение и меню$(tput sgr 0)" >&2
   exit 1
 fi
