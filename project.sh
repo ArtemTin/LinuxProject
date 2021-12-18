@@ -348,7 +348,7 @@ else # интерактивный режим
   read comm
   until commCorrect; do
     echo -n "$(tput setaf 1)Неверная команда,$(tput sgr 0) $(tput setaf 4)повторите ввод: $(tput sgr 0)"
-    pri
+    printmenu
     read comm
   done
 
