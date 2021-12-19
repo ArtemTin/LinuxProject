@@ -24,7 +24,7 @@ startupConfig() {
 commCorrect() {
   if ! echo "$comm" | grep -Eq "^[0-9][0-9]*$" ; then
     return 1
-  elif [ "$comm" -ge 0 -a "$comm" -le 18 ]; then
+  elif [ "$comm" -ge 0 ] && [ "$comm" -le 18 ]; then
     return 0
   else
     return 1
@@ -121,7 +121,7 @@ changeCWD() {
   echo "Текущий полный путь: $prev_wd"
   echo -n "Введите полный или относительный путь новой директории (как для cd): "
   read newwd
-  cd $newwd
+  cd "$newwd"
   echo "Новая папка: $(PWD)"
 }
 
@@ -154,11 +154,11 @@ changeProg() {
 
 # (вспомогательная) Показывает кол-во строк и слов в текстовом файле
 showLinesAndWords() {
-  linesdirty=$(wc -l $filename)
-  lines=($linesdirty)
-  wordsdirty=$(wc -w $filename)
-  words=($wordsdirty)
-  filebase=$(basename $filename)
+  linesdirty=$(wc -l "$filename")
+  lines=("$linesdirty")
+  wordsdirty=$(wc -w "$filename")
+  words=("$wordsdirty")
+  filebase=$(basename "$filename")
   echo "$filebase words: $words lines: $lines"
 }
 
@@ -188,7 +188,7 @@ showJunkSize() {
       echo "Файлов с расширением $ext не нашлось"
     fi
     for file in $files; do
-      du $file
+      du "$file"
     done
   done
 }
@@ -260,43 +260,43 @@ printFullMenu() {
 
 commandSelector() {
   commm=$1
-  if [ $commm -eq 1 ]; then
+  if [ "$commm" -eq 1 ]; then
     redefineTmp
-  elif [ $commm -eq 2 ]; then
+  elif [ "$commm" -eq 2 ]; then
     addTmp
-  elif [ $commm -eq 3 ]; then
+  elif [ "$commm" -eq 3 ]; then
     removeTmp
-  elif [ $commm -eq 4 ]; then
+  elif [ "$commm" -eq 4 ]; then
     showJunkSize
-  elif [ $commm -eq 5 ]; then
+  elif [ "$commm" -eq 5 ]; then
     cleanupTmp
-  elif [ $commm -eq 6 ]; then
+  elif [ "$commm" -eq 6 ]; then
     redefineWorking
-  elif [ $commm -eq 7 ]; then
+  elif [ "$commm" -eq 7 ]; then
     addWorking
-  elif [ $commm -eq 8 ]; then
+  elif [ "$commm" -eq 8 ]; then
     removeWorking
-  elif [ $commm -eq 9 ]; then
+  elif [ "$commm" -eq 9 ]; then
     showForEveryWorking
-  elif [ $commm -eq 10 ]; then
+  elif [ "$commm" -eq 10 ]; then
     execProg
-  elif [ $commm -eq 11 ]; then
+  elif [ "$commm" -eq 11 ]; then
     changeProg
-  elif [ $commm -eq 12 ]; then
+  elif [ "$commm" -eq 12 ]; then
     changeCWD
-  elif [ $commm -eq 13 ]; then
+  elif [ "$commm" -eq 13 ]; then
     showTmp
-  elif [ $commm -eq 14 ]; then
+  elif [ "$commm" -eq 14 ]; then
     showWorking
-  elif [ $commm -eq 15 ]; then
+  elif [ "$commm" -eq 15 ]; then
     showProg
-  elif [ $commm -eq 16 ]; then
+  elif [ "$commm" -eq 16 ]; then
     showCWD
-  elif [ $comm -eq 17 ]; then
+  elif [ "$comm" -eq 17 ]; then
     showConfigLocation
-  elif [ $comm -eq 18 ]; then
+  elif [ "$comm" -eq 18 ]; then
     printFullMenu
-  elif [ $comm -eq 0 ]; then
+  elif [ "$comm" -eq 0 ]; then
     echo "$(tput setaf 2)Завершение. $(tput sgr 0)"
     exit
   fi
@@ -311,7 +311,7 @@ if [ "$(id -u)" -eq 0 ]; then
   exit 1
 fi
 
-name=$(basename $0)
+name=$(basename "$0")
 configLocation="$(PWD)/conf.myconfig"
 
 
@@ -326,7 +326,7 @@ elif [ "$1" == "--action" ]; then # тихий режим
   until [ "$comm" == "" ]; do
     if commCorrect; then
       echo "$(tput setaf 3)Выполнение команды $comm$(tput sgr 0)"
-      commandSelector $comm
+      commandSelector "$comm"
     else
       echo "$(tput setaf 1)Неверный номер команды:$(tput sgr 0) $comm" >&2
       exit 1
@@ -353,7 +353,7 @@ else # интерактивный режим
   done
 
   while [ "$comm" -ne 0 ]; do
-    commandSelector $comm
+    commandSelector "$comm"
 
     printmenu
     showConfigLocation
